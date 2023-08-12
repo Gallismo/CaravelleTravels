@@ -1,5 +1,6 @@
 package ru.almaz.CaravelleTravels;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -7,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.almaz.CaravelleTravels.config.BotConfig;
 @Component
+@Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig config;
@@ -21,7 +23,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             long chatId = update.getMessage().getChatId();
             String text = update.getMessage().getText();
-            System.out.println("Message text: " + text + ". Sender: " + update.getMessage().getChat().getUserName());
 
             switch (text) {
                 case "/start":
@@ -36,9 +37,11 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void startCommandReceived(String userName, long chatId) {
         String answer = "Hello, " + userName + "!";
+        log.info("Replied to user " + userName);
 
         sendMessage(answer, chatId);
     }
+
 
     private void sendMessage(String text, long chatId) {
         SendMessage message = new SendMessage();
@@ -47,7 +50,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
         }
     }
 
