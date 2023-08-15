@@ -8,8 +8,10 @@ import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingC
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.almaz.CaravelleTravels.bot.commands.BookingCommand;
 import ru.almaz.CaravelleTravels.bot.commands.StartCommand;
 import ru.almaz.CaravelleTravels.config.BotConfig;
+import ru.almaz.CaravelleTravels.services.BookingService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
 import java.util.HashMap;
@@ -23,10 +25,11 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
     private final BotConfig config;
 ;
     @Autowired
-    public TelegramBot(BotConfig config, UserService userService) {
+    public TelegramBot(BotConfig config, StartCommand startCommand, BookingCommand bookingCommand) {
         super(config.getToken());
         this.config = config;
-        register(new StartCommand(userService));
+        register(startCommand);
+        register(bookingCommand);
         registerDefaultAction(((absSender, message) -> sendMessage("Unkown command", message.getChatId())));
     }
 

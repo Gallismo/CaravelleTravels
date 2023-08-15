@@ -2,6 +2,7 @@ package ru.almaz.CaravelleTravels.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Date;
 
@@ -13,24 +14,29 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private User user;
 
-    @Column(name = "from_place", nullable = false)
+    @Column(name = "from_place")
     private String fromPlace;
 
-    @Column(name = "to_place", nullable = false)
+    @Column(name = "to_place")
     private String toPlace;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "date")
     private Date date;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "passenger_name", nullable = false)
+    @Column(name = "passenger_name")
     private String passengerName;
 
-    @Column(name = "passengers_count", nullable = false)
+    @Column(name = "passengers_count")
     private Integer passengersCount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "booking_status", nullable = false)
+    private BookingStatus bookingStatus = BookingStatus.CREATING;
 }

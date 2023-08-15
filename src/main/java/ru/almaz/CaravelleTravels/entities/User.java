@@ -3,6 +3,8 @@ package ru.almaz.CaravelleTravels.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "users")
@@ -30,7 +32,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private BookingState bookingState = BookingState.NONE;
 
-    @Column(name = "booking_id")
-    private Long bookingId;
+//    @Column(name = "booking_id")
+    @OneToMany(mappedBy = "user")
+    private List<Booking> bookings;
 
 }
