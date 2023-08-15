@@ -30,4 +30,7 @@ public class Booking {
 
     @Column(name = "passenger_name", nullable = false)
     private String passengerName;
+
+    @Column(name = "passengers_count", nullable = false)
+    private Integer passengersCount;
 }

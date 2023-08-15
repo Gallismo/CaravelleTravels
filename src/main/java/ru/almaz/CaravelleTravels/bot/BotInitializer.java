@@ -1,4 +1,4 @@
-package ru.almaz.CaravelleTravels;
+package ru.almaz.CaravelleTravels.bot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import ru.almaz.CaravelleTravels.bot.TelegramBot;
 
 @Component
 @Slf4j

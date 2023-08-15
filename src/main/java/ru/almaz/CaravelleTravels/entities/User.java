@@ -1,6 +1,5 @@
 package ru.almaz.CaravelleTravels.entities;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,6 +7,9 @@ import lombok.Data;
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User() {
+    }
 
     public User(Long chatId) {
         this.chatId = chatId;
@@ -25,10 +27,10 @@ public class User {
     private boolean permissions = false;
 
     @Column(name = "booking_state", nullable = false)
-    private String bookingState = "noob";
+    @Enumerated(EnumType.STRING)
+    private BookingState bookingState = BookingState.NONE;
 
     @Column(name = "booking_id")
     private Long bookingId;
-
 
 }
