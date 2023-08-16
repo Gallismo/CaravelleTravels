@@ -25,19 +25,28 @@ public class BookingCommand extends MyCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+        String chatId = chat.getId().toString();
         ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
 
         if (dbUser == null) {
-            execute(absSender, new SendMessage(chat.getId().toString(), "Для запуска работы с ботом используйте команду /start"));
+            execute(absSender, new SendMessage(chatId, "Для запуска работы с ботом используйте команду /start"));
             return;
         }
 
         if (dbUser.getBookingState() != BookingState.NONE) {
-            execute(absSender, new SendMessage(chat.getId().toString(), "Вы уже начали процесс записи на поездку.\n" +
+            execute(absSender, new SendMessage(chatId, "Вы уже начали процесс записи на поездку.\n" +
                     "Продолжите вводить данные, либо выполните команду /cancelBooking."));
             return;
         }
 
         bookingService.createNewBooking(dbUser);
+//        dbUser = userService.getUserByChatId(chat.getId());
+//        if (dbUser == null) {
+//            execute(absSender, new SendMessage(chatId, "Для запуска работы с ботом используйте команду /start"));
+//            return;
+//        }
+        execute(absSender, new SendMessage(chatId, "Процесс заполнения заявки начат, номер заявки - "
+                + dbUser.getProcessingBooking()));
+        execute(absSender, new SendMessage(chatId, dbUser.getBookingState().getMessageToSend()));
     }
 }

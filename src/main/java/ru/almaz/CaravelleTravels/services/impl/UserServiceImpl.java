@@ -40,9 +40,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
     @Override
-    public boolean doesUserStartedBooking(Long chatId) {
+    public User doesUserStartedBooking(Long chatId) {
         Optional<User> user = userRepository.findUserByChatId(chatId);
-        return user.filter(value -> value.getBookingState() != BookingState.NONE).isPresent();
+        return user.filter(value -> value.getBookingState() != BookingState.NONE).orElse(null);
     }
+
+    @Override
+    @Transactional
+    public User setNextBookingState(Long chatId) {
+        User user = getUserByChatId(chatId);
+        if (user == null) return null;
+        user.setBookingState(user.getBookingState().next());
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public void clearProcessingBooking(Long chatId) {
+        User user = getUserByChatId(chatId);
+        if (user == null) return;
+        user.setProcessingBooking(null);
+        userRepository.save(user);
+    }
+
 
 }

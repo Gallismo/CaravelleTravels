@@ -25,7 +25,7 @@ public class Booking {
     private String toPlace;
 
     @Column(name = "date")
-    private Date date;
+    private String date;
 
     @Column(name = "phone_number")
     private String phoneNumber;

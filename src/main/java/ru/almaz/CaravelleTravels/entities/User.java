@@ -32,8 +32,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private BookingState bookingState = BookingState.NONE;
 
-//    @Column(name = "booking_id")
+    @Column(name = "processing_booking_id")
+    private Long processingBooking;
+
     @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
+
 
 }

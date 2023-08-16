@@ -9,5 +9,9 @@ public interface UserService {
     User getUserByChatId(Long chatId);
 
     void save(User user);
-    boolean doesUserStartedBooking(Long chatId);
+    User doesUserStartedBooking(Long chatId);
+
+    User setNextBookingState(Long chatId);
+
+    void clearProcessingBooking(Long chatId);
 }
