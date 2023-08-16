@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService {
     public void clearProcessingBooking(Long chatId) {
         User user = getUserByChatId(chatId);
         if (user == null) return;
+        user.setBookingState(BookingState.NONE);
         user.setProcessingBooking(null);
         userRepository.save(user);
     }

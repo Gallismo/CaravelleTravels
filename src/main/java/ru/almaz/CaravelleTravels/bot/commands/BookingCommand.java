@@ -5,11 +5,20 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.MyCommand;
 import ru.almaz.CaravelleTravels.entities.BookingState;
+import ru.almaz.CaravelleTravels.entities.BookingStatus;
 import ru.almaz.CaravelleTravels.services.BookingService;
 import ru.almaz.CaravelleTravels.services.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class BookingCommand extends MyCommand {
 
@@ -38,15 +47,29 @@ public class BookingCommand extends MyCommand {
                     "Продолжите вводить данные, либо выполните команду /cancelBooking."));
             return;
         }
+        if (bookingService.getFirstUserBookingByStatus(BookingStatus.CREATED, dbUser) != null) {
+            execute(absSender, new SendMessage(chatId, "В целях избежания спама, действие было прервано по причине: " +
+                    "У вас имеется созданная и необработанная заявка."));
+            return;
+        }
 
         bookingService.createNewBooking(dbUser);
-//        dbUser = userService.getUserByChatId(chat.getId());
-//        if (dbUser == null) {
-//            execute(absSender, new SendMessage(chatId, "Для запуска работы с ботом используйте команду /start"));
-//            return;
-//        }
-        execute(absSender, new SendMessage(chatId, "Процесс заполнения заявки начат, номер заявки - "
-                + dbUser.getProcessingBooking()));
-        execute(absSender, new SendMessage(chatId, dbUser.getBookingState().getMessageToSend()));
+
+        execute(absSender, new SendMessage(chatId, "Процесс заполнения заявки начат, номер заявки - " + dbUser.getProcessingBooking()));
+        SendMessage sendMessage = new SendMessage(chatId, dbUser.getBookingState().getMessageToSend());
+
+        sendMessage.setReplyMarkup(createKeyboard());
+        execute(absSender, sendMessage);
+    }
+
+    private ReplyKeyboardMarkup createKeyboard() {
+        KeyboardRow keyboardRow = new KeyboardRow();
+        keyboardRow.add("/cancel_booking");
+        List<KeyboardRow> keyboardRowList = new ArrayList<>();
+        keyboardRowList.add(keyboardRow);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboardRowList);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
     }
 }

@@ -18,4 +18,7 @@ public interface BookingService {
     void setPassengersColumn(User user, String value);
 
     void setStatus(User user, BookingStatus status);
+
+    Booking getFirstUserBookingByStatus(BookingStatus status, User user);
+    void deleteBooking(Long id);
 }

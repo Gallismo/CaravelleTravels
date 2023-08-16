@@ -108,5 +108,22 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
     }
 
+    @Override
+    public Booking getFirstUserBookingByStatus(BookingStatus status, User user) {
+        List<Booking> bookingList = bookingRepository.getUserBookingsByStatus(status, user);
+        if (bookingList.size() > 0) {
+            return bookingList.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public void deleteBooking(Long id) {
+        Booking booking = getBookingById(id);
+        if (booking == null) return;
+        bookingRepository.delete(booking);
+    }
+
 
 }

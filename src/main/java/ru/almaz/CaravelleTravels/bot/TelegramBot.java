@@ -4,12 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.almaz.CaravelleTravels.bot.commands.BookingCommand;
+import ru.almaz.CaravelleTravels.bot.commands.CancelBookingCommand;
 import ru.almaz.CaravelleTravels.bot.commands.StartCommand;
 import ru.almaz.CaravelleTravels.config.BotConfig;
+
+import java.util.Locale;
 
 @Component
 @Slf4j
@@ -17,31 +23,19 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
 
     private final BotConfig config;
     private final BookingProcessRouter bookingProcessRouter;
+    private final CancelBookingCommand cancelBookingCommand;
 ;
     @Autowired
-    public TelegramBot(BotConfig config, StartCommand startCommand, BookingCommand bookingCommand, BookingProcessRouter bookingProcessRouter) {
+    public TelegramBot(BotConfig config, StartCommand startCommand, BookingCommand bookingCommand, CancelBookingCommand cancelBookingCommand, BookingProcessRouter bookingProcessRouter) {
         super(config.getToken());
         this.config = config;
         this.bookingProcessRouter = bookingProcessRouter;
+        this.cancelBookingCommand = cancelBookingCommand;
         register(startCommand);
         register(bookingCommand);
+        register(cancelBookingCommand);
         registerDefaultAction(((absSender, message) -> sendMessage("Unkown command", message.getChatId())));
     }
-
-//    @Override
-//    public void onUpdateReceived(Update update) {
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//
-//        }
-//    }
-
-//    private void startCommandReceived(String userName, Long chatId) {
-//        String answer = "Hello, " + userName + "!";
-//
-//        userService.saveNewBotUser(chatId);
-//        sendMessage(answer, chatId);
-//        log.info("Replied to user " + userName + ", saved new user");
-//    }
 
 
     private void sendMessage(String text, Long chatId) {
@@ -68,6 +62,9 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
             } catch (TelegramApiException e) {
                 log.error(e.getMessage());
             }
+        }
+        if (update.hasCallbackQuery()) {
+            String callback = update.getCallbackQuery().getData();
         }
     }
 }

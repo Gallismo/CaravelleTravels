@@ -2,13 +2,18 @@ package ru.almaz.CaravelleTravels.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "bookings")
+@Slf4j
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +30,9 @@ public class Booking {
     private String toPlace;
 
     @Column(name = "date")
-    private String date;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    private Date date;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -39,4 +46,18 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(name = "booking_status", nullable = false)
     private BookingStatus bookingStatus = BookingStatus.CREATING;
+
+    public void setDate(String date) {
+        if (date.matches(BookingState.DATE.getRegex())) {
+            try {
+                this.date = BookingState.dateFormatter().parse(date);
+            } catch (ParseException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    public String getDate() {
+        return BookingState.dateFormatter().format(this.date);
+    }
 }
