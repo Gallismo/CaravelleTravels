@@ -9,10 +9,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.almaz.CaravelleTravels.bot.commands.BookingCommand;
-import ru.almaz.CaravelleTravels.bot.commands.CancelBookingCommand;
-import ru.almaz.CaravelleTravels.bot.commands.StartCommand;
+import ru.almaz.CaravelleTravels.bot.commands.*;
 import ru.almaz.CaravelleTravels.config.BotConfig;
 
 import java.util.Locale;
@@ -23,18 +22,38 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
 
     private final BotConfig config;
     private final BookingProcessRouter bookingProcessRouter;
-    private final CancelBookingCommand cancelBookingCommand;
 ;
     @Autowired
-    public TelegramBot(BotConfig config, StartCommand startCommand, BookingCommand bookingCommand, CancelBookingCommand cancelBookingCommand, BookingProcessRouter bookingProcessRouter) {
+    public TelegramBot(BotConfig config, StartCommand startCommand,
+                       BookingCommand bookingCommand, CancelBookingCommand cancelBookingCommand,
+                       BookingProcessRouter bookingProcessRouter, PermissionCommand permissionCommand,
+                       BackCommand backCommand) {
         super(config.getToken());
         this.config = config;
         this.bookingProcessRouter = bookingProcessRouter;
-        this.cancelBookingCommand = cancelBookingCommand;
         register(startCommand);
         register(bookingCommand);
         register(cancelBookingCommand);
+        register(permissionCommand);
+        register(backCommand);
+        register(new MyCommand("help", "Выводит список всех команд") {
+            @Override
+            public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+                execute(absSender, getCommands(chat.getId().toString()));
+            }
+        });
         registerDefaultAction(((absSender, message) -> sendMessage("Unkown command", message.getChatId())));
+    }
+
+    private SendMessage getCommands(String chatId) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (IBotCommand command : getRegisteredCommands()) {
+            stringBuilder.append("/").append("<b>").append(command.getCommandIdentifier()).append("</b>");
+            stringBuilder.append(" - ").append(command.getDescription()).append('\n');
+        }
+        SendMessage sendMessage = new SendMessage(chatId, stringBuilder.toString());
+        sendMessage.setParseMode("HTML");
+        return sendMessage;
     }
 
 
@@ -65,6 +84,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
         }
         if (update.hasCallbackQuery()) {
             String callback = update.getCallbackQuery().getData();
+            System.out.println(getRegisteredCommands());
         }
     }
 }

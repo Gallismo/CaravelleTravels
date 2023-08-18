@@ -3,6 +3,7 @@ package ru.almaz.CaravelleTravels.bot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
@@ -36,18 +37,21 @@ public class BookingProcessRouter {
             return new SendMessage(chatId.toString(), user.getBookingState().getRegexErrorMessage() + "regex");
         }
 
-//        Booking booking = bookingService.getBookingById(user.getProcessingBooking());
+
         setCurrentColumnValue(user, messageText);
         user = userService.setNextBookingState(chatId);
-        if (user == null) {
-            return new SendMessage(chatId.toString(), "Error");
-        }
+
         if (user.getBookingState() == BookingState.NONE) {
-            userService.clearProcessingBooking(chatId);
             bookingService.setStatus(user, BookingStatus.CREATED);
-            return new SendMessage(chatId.toString(), "Процесс заполнения заявки завершен, ожидайте звонка!");
+            userService.clearProcessingBooking(chatId);
+            SendMessage sendMessage = new SendMessage(chatId.toString(),
+                    "Процесс заполнения заявки №" + user.getProcessingBooking() + " завершен, ожидайте звонка!");
+            sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
+            return sendMessage;
         }
-        return new SendMessage(chatId.toString(), user.getBookingState().getMessageToSend());
+        SendMessage sendMessage = new SendMessage(chatId.toString(), user.getBookingState().getMessageToSend());
+        sendMessage.setReplyMarkup(Keyboards.getKeyboard("/cancel", "/back"));
+        return sendMessage;
     }
 
     private void setCurrentColumnValue(User user, String value) {

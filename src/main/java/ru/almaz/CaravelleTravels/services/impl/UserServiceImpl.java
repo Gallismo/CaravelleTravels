@@ -57,6 +57,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public User setPrevBookingState(Long chatId) {
+        User user = getUserByChatId(chatId);
+        if (user == null) return null;
+        if (user.getBookingState().prev() != BookingState.NONE) {
+            user.setBookingState(user.getBookingState().prev());
+            userRepository.save(user);
+        }
+        return user;
+    }
+
+    @Override
+    @Transactional
     public void clearProcessingBooking(Long chatId) {
         User user = getUserByChatId(chatId);
         if (user == null) return;

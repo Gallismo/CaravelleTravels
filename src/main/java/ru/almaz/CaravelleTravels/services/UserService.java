@@ -13,5 +13,7 @@ public interface UserService {
 
     User setNextBookingState(Long chatId);
 
+    User setPrevBookingState(Long chatId);
+
     void clearProcessingBooking(Long chatId);
 }

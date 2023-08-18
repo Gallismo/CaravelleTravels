@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.bots.AbsSender;
+import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.MyCommand;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
@@ -58,18 +59,7 @@ public class BookingCommand extends MyCommand {
         execute(absSender, new SendMessage(chatId, "Процесс заполнения заявки начат, номер заявки - " + dbUser.getProcessingBooking()));
         SendMessage sendMessage = new SendMessage(chatId, dbUser.getBookingState().getMessageToSend());
 
-        sendMessage.setReplyMarkup(createKeyboard());
+        sendMessage.setReplyMarkup(Keyboards.getKeyboard("/cancel"));
         execute(absSender, sendMessage);
-    }
-
-    private ReplyKeyboardMarkup createKeyboard() {
-        KeyboardRow keyboardRow = new KeyboardRow();
-        keyboardRow.add("/cancel_booking");
-        List<KeyboardRow> keyboardRowList = new ArrayList<>();
-        keyboardRowList.add(keyboardRow);
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        keyboardMarkup.setKeyboard(keyboardRowList);
-        keyboardMarkup.setResizeKeyboard(true);
-        return keyboardMarkup;
     }
 }

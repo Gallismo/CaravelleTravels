@@ -1,7 +1,7 @@
 package ru.almaz.CaravelleTravels.bot;
 
 public enum Callbacks {
-    CANCEL_BOOKING("/cancel_booking"), BACK("/back");
+    CANCEL_BOOKING("/cancel"), BACK("/back");
 
     private final String command;
 

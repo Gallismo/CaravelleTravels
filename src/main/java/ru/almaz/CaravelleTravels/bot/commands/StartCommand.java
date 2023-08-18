@@ -23,7 +23,9 @@ public class StartCommand extends MyCommand {
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         String answer = "Hi, " + user.getFirstName() + " " + user.getLastName() + "!";
-        userService.saveNewBotUser(chat.getId());
+        if (userService.getUserByChatId(chat.getId()) == null) {
+            userService.saveNewBotUser(chat.getId());
+        }
         SendMessage message = new SendMessage(chat.getId().toString(), answer);
         execute(absSender, message);
     }
