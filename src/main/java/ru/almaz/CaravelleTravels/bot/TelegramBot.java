@@ -53,23 +53,56 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
         register(cancelBookingCommand);
         register(backCommand);
         register(informationCommand);
-        register(getBookingCommand);
         register(questionsCommand);
+        register(getBookingCommand);
         register(getBookingsByDateCommand);
         register(new MyCommand("help", "Выводит список всех команд") {
             @Override
             public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-                execute(absSender, getCommands(chat.getId().toString()));
+                execute(absSender, getUserCommands(chat.getId().toString(), false));
             }
         });
-        registerDefaultAction(((absSender, message) -> sendMessage(new SendMessage(message.getChatId().toString(), "Unkown command"))));
+        register(new MyCommand("help_admin", "Выводит список команд администратора") {
+            @Override
+            public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+                ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
+                if (dbUser != null && dbUser.isPermissions()) {
+                    execute(absSender, getUserCommands(chat.getId().toString(), true));
+                } else {
+                    execute(absSender, new SendMessage(chat.getId().toString(), "У вас нет прав доступа."));
+                }
+            }
+        });
+        registerDefaultAction(((absSender, message) -> sendMessage(new SendMessage(message.getChatId().toString(), "Неизвестная команда\n\nДля получения списка команд введите /help"))));
     }
 
-    private SendMessage getCommands(String chatId) {
+    private SendMessage getUserCommands(String chatId, boolean forAdmin) {
         StringBuilder stringBuilder = new StringBuilder();
         for (IBotCommand command : getRegisteredCommands()) {
-            stringBuilder.append("/").append("<b>").append(command.getCommandIdentifier()).append("</b>");
-            stringBuilder.append(" - ").append(command.getDescription()).append('\n');
+            if (forAdmin) {
+                if (command.getDescription().matches("admin .+\n.+")) {
+                    stringBuilder
+                            .append(command.getDescription().split("admin ")[1])
+                            .append(" - ")
+                            .append("<b>")
+                            .append("/")
+                            .append(command.getCommandIdentifier())
+                            .append("</b>")
+                            .append(";\n\n");
+                }
+            } else {
+                if (command.getDescription().matches("admin .+\n.+")) {
+                    continue;
+                }
+                stringBuilder
+                        .append(command.getDescription())
+                        .append(" - ")
+                        .append("<b>")
+                        .append("/")
+                        .append(command.getCommandIdentifier())
+                        .append("</b>")
+                        .append(";\n\n");
+            }
         }
         SendMessage sendMessage = new SendMessage(chatId, stringBuilder.toString());
         sendMessage.setParseMode("HTML");

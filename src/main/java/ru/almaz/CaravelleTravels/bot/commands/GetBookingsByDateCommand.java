@@ -24,7 +24,7 @@ public class GetBookingsByDateCommand extends MyCommand {
 
     @Autowired
     public GetBookingsByDateCommand(UserService userService, BookingService bookingService) {
-        super("getbookingsbydate", "Команда для получения заявок по дате");
+        super("date", "admin Команда для нахождения заявок по дате\n<b>Для администратора</b> (Пример /date 01.01.2000)");
         this.userService = userService;
         this.bookingService = bookingService;
     }

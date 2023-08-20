@@ -19,7 +19,7 @@ public class GetBookingCommand extends MyCommand {
 
     @Autowired
     public GetBookingCommand(UserService userService, BookingService bookingService) {
-        super("getbooking", "Команда для получения заявки по номеру");
+        super("find", "admin Команда для нахождения заявки по идентификатору\n<b>Для администратора</b> (Пример /find 1)");
         this.userService = userService;
         this.bookingService = bookingService;
     }
