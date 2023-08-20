@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.services.BookingService;
@@ -35,16 +36,16 @@ public class GetBookingsByDateCommand extends MyCommand {
         sendMessage.setChatId(chat.getId().toString());
 
         if (strings.length == 0) {
-            sendMessage.setText("Необходимо указать дату заявки (/getbooking XX.XX.XXXX).");
-            execute(absSender, sendMessage);
+            sendMessage.setText(TextConfig.findByDateNotInputtedDateText);
+            reply(absSender, sendMessage);
             return;
         }
         Date bookingDate;
         try {
             bookingDate = BookingState.dateFormatter().parse(strings[0]);
         } catch (ParseException e) {
-            sendMessage.setText("Дату заявки необходимо указать в формате XX.XX.XXXX");
-            execute(absSender, sendMessage);
+            sendMessage.setText(TextConfig.dateErrorText);
+            reply(absSender, sendMessage);
             return;
         }
         ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
@@ -54,15 +55,15 @@ public class GetBookingsByDateCommand extends MyCommand {
                 for (Booking booking: bookings) {
                     sendMessage.setText(booking.toMessage());
                     sendMessage.setReplyMarkup(Keyboards.getProccesedButton(booking.getId()));
-                    execute(absSender, sendMessage);
+                    reply(absSender, sendMessage);
                 }
             } else {
-                sendMessage.setText("Заявок с такой датой не существует.");
-                execute(absSender, sendMessage);
+                sendMessage.setText(TextConfig.notFoundedByDateBookingsText);
+                reply(absSender, sendMessage);
             }
             return;
         }
-        sendMessage.setText("Вы не имеете прав доступа.");
-        execute(absSender, sendMessage);
+        sendMessage.setText(TextConfig.noPermissionText);
+        reply(absSender, sendMessage);
     }
 }

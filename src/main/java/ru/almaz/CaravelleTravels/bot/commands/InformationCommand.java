@@ -27,7 +27,7 @@ public class InformationCommand extends MyCommand {
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         List<UpdatableContent> updatableContents = updatableContentService.findAll();
         for (UpdatableContent updatableContent: updatableContents) {
-            execute(absSender, new SendMessage(chat.getId().toString(), updatableContent.toMessage()));
+            reply(absSender, new SendMessage(chat.getId().toString(), updatableContent.toMessage()));
         }
     }
 }

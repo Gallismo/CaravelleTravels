@@ -59,7 +59,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
         register(new MyCommand("help", "Выводит список всех команд") {
             @Override
             public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-                execute(absSender, getUserCommands(chat.getId().toString(), false));
+                reply(absSender, getUserCommands(chat.getId().toString(), false));
             }
         });
         register(new MyCommand("help_admin", "Выводит список команд администратора") {
@@ -67,9 +67,9 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
             public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
                 ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
                 if (dbUser != null && dbUser.isPermissions()) {
-                    execute(absSender, getUserCommands(chat.getId().toString(), true));
+                    reply(absSender, getUserCommands(chat.getId().toString(), true));
                 } else {
-                    execute(absSender, new SendMessage(chat.getId().toString(), "У вас нет прав доступа."));
+                    reply(absSender, new SendMessage(chat.getId().toString(), "У вас нет прав доступа."));
                 }
             }
         });

@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.services.UserService;
 @Component
 public class StartCommand extends MyCommand {
@@ -21,11 +22,11 @@ public class StartCommand extends MyCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-        String answer = "Hi, " + user.getFirstName() + " " + user.getLastName() + "!";
+        String text = TextConfig.startCommandText;
         if (userService.getUserByChatId(chat.getId()) == null) {
             userService.saveNewBotUser(chat.getId());
         }
-        SendMessage message = new SendMessage(chat.getId().toString(), answer);
-        execute(absSender, message);
+        SendMessage message = new SendMessage(chat.getId().toString(), text);
+        reply(absSender, message);
     }
 }

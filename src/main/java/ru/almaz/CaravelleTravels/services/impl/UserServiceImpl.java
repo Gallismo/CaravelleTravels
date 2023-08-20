@@ -40,6 +40,14 @@ public class UserServiceImpl implements UserService {
     public void save(User user) {
         userRepository.save(user);
     }
+
+    @Override
+    @Transactional
+    public void update(Long id, User user) {
+        user.setId(id);
+        userRepository.save(user);
+    }
+
     @Override
     public User doesUserStartedBooking(Long chatId) {
         Optional<User> user = userRepository.findUserByChatId(chatId);

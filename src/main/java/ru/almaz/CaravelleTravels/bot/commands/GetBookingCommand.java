@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.services.BookingService;
 import ru.almaz.CaravelleTravels.services.UserService;
@@ -30,16 +31,16 @@ public class GetBookingCommand extends MyCommand {
         sendMessage.setChatId(chat.getId().toString());
 
         if (strings.length == 0) {
-            sendMessage.setText("Необходимо указать номер заявки (/getbooking X).");
-            execute(absSender, sendMessage);
+            sendMessage.setText(TextConfig.findByIdNotInputtedIdText);
+            reply(absSender, sendMessage);
             return;
         }
         Long bookingId;
         try {
             bookingId = Long.parseLong(strings[0]);
         } catch (NumberFormatException e) {
-            sendMessage.setText("Номер заявки необходимо указать в виде целого числа.");
-            execute(absSender, sendMessage);
+            sendMessage.setText(TextConfig.notIntegerBookingIdErrorText);
+            reply(absSender, sendMessage);
             return;
         }
         ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
@@ -48,14 +49,14 @@ public class GetBookingCommand extends MyCommand {
             if (booking != null) {
                 sendMessage.setText(booking.toMessage());
                 sendMessage.setReplyMarkup(Keyboards.getProccesedButton(bookingId));
-                execute(absSender, sendMessage);
+                reply(absSender, sendMessage);
             } else {
-                sendMessage.setText("Заявки с таким номером не существует.");
-                execute(absSender, sendMessage);
+                sendMessage.setText(TextConfig.notFoundedByIdBookingText);
+                reply(absSender, sendMessage);
             }
             return;
         }
-        sendMessage.setText("Вы не имеете прав доступа.");
-        execute(absSender, sendMessage);
+        sendMessage.setText(TextConfig.noPermissionText);
+        reply(absSender, sendMessage);
     }
 }

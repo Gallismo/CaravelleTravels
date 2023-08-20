@@ -13,13 +13,12 @@ public interface BookingService {
     Booking getBookingById(Long id);
 
     void setDateColumn(User user, String value);
-
     void setFromColumn(User user, String value);
     void setToColumn(User user, String value);
     void setPhoneColumn(User user, String value);
     void setNameColumn(User user, String value);
     void setPassengersColumn(User user, String value);
-
+    void update(Long id, Booking booking);
     void setStatus(User user, BookingStatus status);
     void setStatus(Booking booking, BookingStatus status);
 

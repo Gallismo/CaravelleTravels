@@ -11,6 +11,8 @@ public interface UserService {
     User getUserByChatId(Long chatId);
 
     void save(User user);
+
+    void update(Long id, User user);
     User doesUserStartedBooking(Long chatId);
 
     User setNextBookingState(Long chatId);

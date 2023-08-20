@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
 import ru.almaz.CaravelleTravels.services.BookingService;
@@ -32,27 +33,25 @@ public class BookingCommand extends MyCommand {
         ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
 
         if (dbUser == null) {
-            execute(absSender, new SendMessage(chatId, "Для запуска работы с ботом используйте команду /start"));
+            reply(absSender, new SendMessage(chatId, TextConfig.notStartedBotText));
             return;
         }
 
         if (dbUser.getBookingState() != BookingState.NONE) {
-            execute(absSender, new SendMessage(chatId, "Вы уже начали процесс записи на поездку.\n" +
-                    "Продолжите вводить данные, либо выполните команду /cancelBooking."));
+            reply(absSender, new SendMessage(chatId, TextConfig.alreadyStartedBookingText));
             return;
         }
         if (bookingService.getFirstUserBookingByStatus(BookingStatus.CREATED, dbUser) != null) {
-            execute(absSender, new SendMessage(chatId, "В целях избежания спама, действие было прервано по причине: " +
-                    "У вас имеется созданная и необработанная заявка."));
+            reply(absSender, new SendMessage(chatId, TextConfig.doNotSpamText));
             return;
         }
 
         bookingService.createNewBooking(dbUser);
 
-        execute(absSender, new SendMessage(chatId, "Процесс заполнения заявки начат, номер заявки - " + dbUser.getProcessingBooking()));
+        reply(absSender, new SendMessage(chatId, TextConfig.startedBookingText + dbUser.getProcessingBooking()));
         SendMessage sendMessage = new SendMessage(chatId, dbUser.getBookingState().getMessageToSend());
 
         sendMessage.setReplyMarkup(Keyboards.getReplyKeyboard("/cancel"));
-        execute(absSender, sendMessage);
+        reply(absSender, sendMessage);
     }
 }

@@ -1,2 +1,11 @@
-bot.name=
-bot.token=
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+spring.datasource.url=jdbc:mariadb://localhost:3306/caravelle_travels
+spring.datasource.username=root
+spring.datasource.password=root
+spring.jpa.hibernate.ddl-auto=create
+#spring.jpa.generate-ddl=true
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect
+spring.jpa.defer-datasource-initialization=true
+spring.sql.init.mode=always
+spring.mvc.hiddenmethod.filter.enabled=true

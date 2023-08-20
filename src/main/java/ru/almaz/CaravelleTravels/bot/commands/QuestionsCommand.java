@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.entities.Answer;
 import ru.almaz.CaravelleTravels.services.AnswerService;
 
@@ -29,8 +30,8 @@ public class QuestionsCommand extends MyCommand {
         List<Answer> answers = answerService.findAll();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat.getId());
-        sendMessage.setText("Часто задаваемые вопросы:");
+        sendMessage.setText(TextConfig.questionsMessageText);
         sendMessage.setReplyMarkup(Keyboards.getQuestionsKeyboard(answers));
-        execute(absSender, sendMessage);
+        reply(absSender, sendMessage);
     }
 }

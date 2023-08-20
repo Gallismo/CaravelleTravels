@@ -8,12 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
-import ru.almaz.CaravelleTravels.entities.Booking;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.services.BookingService;
 import ru.almaz.CaravelleTravels.services.UserService;
-
-import java.util.Objects;
 
 @Component
 public class CancelBookingCommand extends MyCommand {
@@ -33,7 +31,7 @@ public class CancelBookingCommand extends MyCommand {
         ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
 
         if (dbUser == null) {
-            execute(absSender, new SendMessage(chatId, "Для запуска работы с ботом используйте команду /start"));
+            reply(absSender, new SendMessage(chatId, TextConfig.notStartedBotText));
             return;
         }
 
@@ -63,15 +61,14 @@ public class CancelBookingCommand extends MyCommand {
 //        }
 
         if (dbUser.getBookingState() == BookingState.NONE) {
-            execute(absSender, new SendMessage(chatId, "Вы не начинали заполнять заявку на поездку.\n" +
-                    "Для создания заявки воспользуйтесь командой /booking"));
+            reply(absSender, new SendMessage(chatId, TextConfig.noBookingProcessText));
             return;
         }
 
         bookingService.deleteBooking(dbUser.getProcessingBooking());
         userService.clearProcessingBooking(chat.getId());
-        SendMessage sendMessage = new SendMessage(chatId,"Процесс заполнения заявки прерван.");
+        SendMessage sendMessage = new SendMessage(chatId,TextConfig.canceledBookingText);
         sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
-        execute(absSender, sendMessage);
+        reply(absSender, sendMessage);
     }
 }
