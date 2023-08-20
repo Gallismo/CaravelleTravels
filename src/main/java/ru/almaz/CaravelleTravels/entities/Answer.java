@@ -12,10 +12,10 @@ public class Answer {
     private Long id;
 
     // Колонка для часто задаваемых вопросов
-    @Column(nullable = false, unique = true, name = "question")
+    @Column(nullable = false, unique = true, name = "question", columnDefinition = "TEXT")
     private String question;
 
     // Колонка с ответами на вопросы
-    @Column(nullable = false, name = "answer")
+    @Column(nullable = false, name = "answer", columnDefinition = "TEXT")
     private String answer;
 }

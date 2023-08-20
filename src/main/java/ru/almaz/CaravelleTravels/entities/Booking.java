@@ -60,4 +60,24 @@ public class Booking {
     public String getDate() {
         return BookingState.dateFormatter().format(this.date);
     }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", fromPlace='" + fromPlace + '\'' +
+                ", toPlace='" + toPlace + '\'' +
+                ", date=" + date +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", passengerName='" + passengerName + '\'' +
+                ", passengersCount=" + passengersCount +
+                ", bookingStatus=" + bookingStatus +
+                '}';
+    }
+
+    public String toMessage() {
+        return "Дата: " + getDate() + "\nПосадка: " + fromPlace +
+                "\nВысадка: " + toPlace + "\nКоличество мест: " + passengersCount +
+                "\nНомер телефона: " + phoneNumber + "\nИмя: " + passengerName;
+    }
 }

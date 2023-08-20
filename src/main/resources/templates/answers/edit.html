@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/answers/{id}(id=${updatedAnswer.getId()})}" th:method="PATCH" th:object="${updatedAnswer}">
+    <p>Вопрос:</p>
+    <textarea name="question" id="question" cols="30" rows="10" th:field="*{question}"></textarea>
+    <p>Ответ:</p>
+    <textarea name="answer" id="answer" cols="30" rows="10" th:field="*{answer}"></textarea>
+    <button>Обновить</button>
+</form>
+</body>
+</html>

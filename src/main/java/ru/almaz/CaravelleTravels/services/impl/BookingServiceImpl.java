@@ -11,7 +11,8 @@ import ru.almaz.CaravelleTravels.repositories.BookingRepository;
 import ru.almaz.CaravelleTravels.repositories.UserRepository;
 import ru.almaz.CaravelleTravels.services.BookingService;
 
-import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +110,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
+    public void setStatus(Booking booking, BookingStatus status) {
+        booking.setBookingStatus(status);
+        bookingRepository.save(booking);
+    }
+
+    @Override
     public Booking getFirstUserBookingByStatus(BookingStatus status, User user) {
         List<Booking> bookingList = bookingRepository.getUserBookingsByStatus(status, user);
         if (bookingList.size() > 0) {
@@ -123,6 +131,21 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = getBookingById(id);
         if (booking == null) return;
         bookingRepository.delete(booking);
+    }
+
+    @Override
+    public List<Booking> findAll() {
+        return bookingRepository.findAll();
+    }
+
+    @Override
+    public List<Booking> findAllReverseOrder() {
+        return bookingRepository.findAllOrderReversed();
+    }
+
+    @Override
+    public List<Booking> findAllByDate(Date date) {
+        return bookingRepository.findAllByDate(date);
     }
 
 

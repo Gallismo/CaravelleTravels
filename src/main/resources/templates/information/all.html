@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href="/information/new">Добавить новую информацию</a>
+    <div  style="display: flex; justify-content: space-evenly">
+        <div th:each="information : ${informations}" style="border: 1px solid black; padding: 0.5rem">
+            <p>Заголовок:</p>
+            <div th:text="${information.getLexicId()}"/>
+            <p>Информация:</p>
+            <div th:text="${information.getTextContent()}"/>
+            <a th:href="${'/information/edit/' + information.getId()}">Редактировать</a>
+            <form th:action="@{/information/{id}(id=${information.getId()})}" th:method="DELETE">
+                <button>Удалить</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

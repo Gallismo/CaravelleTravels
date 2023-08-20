@@ -5,20 +5,13 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
-import ru.almaz.CaravelleTravels.bot.MyCommand;
+import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
 import ru.almaz.CaravelleTravels.services.BookingService;
 import ru.almaz.CaravelleTravels.services.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class BookingCommand extends MyCommand {
@@ -28,7 +21,7 @@ public class BookingCommand extends MyCommand {
 
     @Autowired
     public BookingCommand(UserService userService, BookingService bookingService) {
-        super("booking", "Start booking a trip");
+        super("booking", "Начать заполнения заявки на поездку");
         this.userService = userService;
         this.bookingService = bookingService;
     }
@@ -59,7 +52,7 @@ public class BookingCommand extends MyCommand {
         execute(absSender, new SendMessage(chatId, "Процесс заполнения заявки начат, номер заявки - " + dbUser.getProcessingBooking()));
         SendMessage sendMessage = new SendMessage(chatId, dbUser.getBookingState().getMessageToSend());
 
-        sendMessage.setReplyMarkup(Keyboards.getKeyboard("/cancel"));
+        sendMessage.setReplyMarkup(Keyboards.getReplyKeyboard("/cancel"));
         execute(absSender, sendMessage);
     }
 }

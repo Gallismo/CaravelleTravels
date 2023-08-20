@@ -11,6 +11,9 @@ import ru.almaz.CaravelleTravels.entities.User;
 import ru.almaz.CaravelleTravels.services.BookingService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class BookingProcessRouter {
     private final UserService userService;
@@ -22,19 +25,21 @@ public class BookingProcessRouter {
         this.bookingService = bookingService;
     }
 
-    public SendMessage process(Long chatId, String messageText) {
+    public List<SendMessage> processAndReturnMessages(Long chatId, String messageText) {
+        List<SendMessage> messages = new ArrayList<>();
         User user = userService.doesUserStartedBooking(chatId);
         if (user == null) {
-            return new SendMessage(chatId.toString(), "Для ввода текстовых данных необходимо " +
+            SendMessage sendMessage = new SendMessage(chatId.toString(), "Для ввода текстовых данных необходимо " +
                     "выполнить команду /start (если вы еще не выполняли её), " +
                     "затем начать процесс заполнения заявки на поездку");
+            messages.add(sendMessage);
+            return messages;
         }
 
         if (!messageText.matches(user.getBookingState().getRegex())) {
-            System.out.println(messageText.matches(user.getBookingState().getRegex()));
-            System.out.println(user.getBookingState().getRegex());
-            System.out.println(user.getBookingState().name());
-            return new SendMessage(chatId.toString(), user.getBookingState().getRegexErrorMessage() + "regex");
+            SendMessage sendMessage = new SendMessage(chatId.toString(), user.getBookingState().getRegexErrorMessage());
+            messages.add(sendMessage);
+            return messages;
         }
 
 
@@ -42,16 +47,22 @@ public class BookingProcessRouter {
         user = userService.setNextBookingState(chatId);
 
         if (user.getBookingState() == BookingState.NONE) {
+            Booking booking = bookingService.getBookingById(user.getProcessingBooking());
+            addNotifySuperUsersMessages(messages, booking);
+
             bookingService.setStatus(user, BookingStatus.CREATED);
             userService.clearProcessingBooking(chatId);
             SendMessage sendMessage = new SendMessage(chatId.toString(),
                     "Процесс заполнения заявки №" + user.getProcessingBooking() + " завершен, ожидайте звонка!");
             sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
-            return sendMessage;
+            messages.add(sendMessage);
+            return messages;
         }
+
         SendMessage sendMessage = new SendMessage(chatId.toString(), user.getBookingState().getMessageToSend());
-        sendMessage.setReplyMarkup(Keyboards.getKeyboard("/cancel", "/back"));
-        return sendMessage;
+        sendMessage.setReplyMarkup(Keyboards.getReplyKeyboard("/cancel", "/back"));
+        messages.add(sendMessage);
+        return messages;
     }
 
     private void setCurrentColumnValue(User user, String value) {
@@ -62,6 +73,19 @@ public class BookingProcessRouter {
             case NAME -> bookingService.setNameColumn(user, value);
             case PHONE -> bookingService.setPhoneColumn(user, value);
             case PASSENGERS -> bookingService.setPassengersColumn(user, value);
+        }
+    }
+
+    private void addNotifySuperUsersMessages(List<SendMessage> messages, Booking booking) {
+        List<User> superUsers = userService.findAllByPermission(true);
+        if (superUsers.size() > 0) {
+            StringBuilder messageText = new StringBuilder();
+            messageText.append("Оформлена заявка №").append(booking.getId()).append('\n').append(booking.toMessage());
+            for (User user : superUsers) {
+                SendMessage sendMessage = new SendMessage(user.getChatId().toString(), messageText.toString());
+                sendMessage.setReplyMarkup(Keyboards.getProccesedButton(booking.getId()));
+                messages.add(sendMessage);
+            }
         }
     }
 }

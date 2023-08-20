@@ -8,6 +8,7 @@ import ru.almaz.CaravelleTravels.entities.User;
 import ru.almaz.CaravelleTravels.repositories.UserRepository;
 import ru.almaz.CaravelleTravels.services.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,5 +78,8 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
+    @Override
+    public List<User> findAllByPermission(boolean isHavePermission) {
+        return userRepository.findAllByPermissions(isHavePermission);
+    }
 }

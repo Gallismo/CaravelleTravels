@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        th, td {
+            border: 1px solid black;
+            padding: 1rem;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Номер заявки</th>
+            <th>Дата</th>
+            <th>Кол-во мест</th>
+            <th>Откуда</th>
+            <th>Куда</th>
+            <th>Номер телефона</th>
+            <th>Кто</th>
+        </tr>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.getId()}"/>
+            <td th:text="${booking.getDate()}"/>
+            <td th:text="${booking.getPassengersCount()}"/>
+            <td th:text="${booking.getFromPlace()}"/>
+            <td th:text="${booking.getToPlace()}"/>
+            <td th:text="${booking.getPhoneNumber()}"/>
+            <td th:text="${booking.getPassengerName()}"/>
+        </tr>
+    </table>
+</body>
+</html>

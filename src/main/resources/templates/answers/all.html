@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a href="/answers/new">Добавить новый вопрос ответ</a>
+    <div  style="display: flex; justify-content: space-evenly">
+        <div th:each="answer : ${answers}" style="border: 1px solid black; padding: 0.5rem">
+            <p>Вопрос:</p>
+            <div th:text="${answer.getQuestion()}"/>
+            <p>Ответ:</p>
+            <div th:text="${answer.getAnswer()}"/>
+            <a th:href="${'/answers/edit/' + answer.getId()}">Редактировать</a>
+            <form th:action="@{/answers/{id}(id=${answer.getId()})}" th:method="DELETE">
+                <button>Удалить</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

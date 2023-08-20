@@ -1,4 +1,4 @@
-package ru.almaz.CaravelleTravels.bot;
+package ru.almaz.CaravelleTravels.bot.commands.abstr;
 
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
