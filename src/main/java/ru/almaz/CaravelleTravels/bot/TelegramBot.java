@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.almaz.CaravelleTravels.bot.commands.*;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
 import ru.almaz.CaravelleTravels.config.BotConfig;
+import ru.almaz.CaravelleTravels.config.TextConfig;
 import ru.almaz.CaravelleTravels.entities.Answer;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
@@ -69,7 +70,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
                 if (dbUser != null && dbUser.isPermissions()) {
                     reply(absSender, getUserCommands(chat.getId().toString(), true));
                 } else {
-                    reply(absSender, new SendMessage(chat.getId().toString(), "У вас нет прав доступа."));
+                    reply(absSender, new SendMessage(chat.getId().toString(), TextConfig.noPermissionText));
                 }
             }
         });
