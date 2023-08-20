@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
+<div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+    <a href="/information/all">Информация</a>
+    <a href="/answers/all">Вопросы и ответы</a>
+    <a href="/booking/">Список заявок</a>
+</div>
 <form th:action="@{/answers/new}" th:method="POST" th:object="${newAnswer}">
     <p>Вопрос:</p>
     <textarea name="question" id="question" cols="30" rows="10" th:field="*{question}"></textarea>

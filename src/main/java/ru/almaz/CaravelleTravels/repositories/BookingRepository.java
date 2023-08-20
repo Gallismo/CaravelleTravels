@@ -16,7 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Optional<Booking> getBookingById(Long id);
     @Query(value = "SELECT b FROM Booking b WHERE b.bookingStatus = ?1 and b.user = ?2")
     List<Booking> getUserBookingsByStatus(BookingStatus status, User user);
-    @Query(value = "SELECT b from Booking b ORDER BY b.id DESC")
+    @Query(value = "SELECT * from bookings b ORDER BY b.id DESC LIMIT 100", nativeQuery = true)
     List<Booking> findAllOrderReversed();
 
     List<Booking> findAllByDate(Date date);

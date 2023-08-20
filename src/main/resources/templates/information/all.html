@@ -5,13 +5,18 @@
     <title>Title</title>
 </head>
 <body>
+    <div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+        <a href="/information/all">Информация</a>
+        <a href="/answers/all">Вопросы и ответы</a>
+        <a href="/booking/">Список заявок</a>
+    </div>
     <a href="/information/new">Добавить новую информацию</a>
-    <div  style="display: flex; justify-content: space-evenly">
+    <div  style="display: flex; justify-content: space-evenly; flex-wrap: wrap">
         <div th:each="information : ${informations}" style="border: 1px solid black; padding: 0.5rem">
             <p>Заголовок:</p>
-            <div th:text="${information.getLexicId()}"/>
+            <div th:text="${information.getLexicId()}"></div>
             <p>Информация:</p>
-            <div th:text="${information.getTextContent()}"/>
+            <div th:text="${information.getTextContent()}"></div>
             <a th:href="${'/information/edit/' + information.getId()}">Редактировать</a>
             <form th:action="@{/information/{id}(id=${information.getId()})}" th:method="DELETE">
                 <button>Удалить</button>
