@@ -12,14 +12,14 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "bookings")
+@Table(name = "bookings", indexes = @Index(columnList = "date"))
 @Slf4j
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
@@ -61,6 +61,22 @@ public class Booking {
         return BookingState.dateFormatter().format(this.date);
     }
 
+    public void setPhoneNumber(String value) {
+        if (value.matches("\\+?\\d{11}")) {
+            int length = value.length();
+            value = value.substring(length - 10, length);
+        } else if (value.matches("\\+?\\d \\d{3} \\d{3} \\d{2} \\d{2}")) {
+            value = String.join("", value.split(" "));
+            int length = value.length();
+            value = value.substring(length - 10, length);
+        } else if (value.matches("\\+?\\d-\\d{3}-\\d{3}-\\d{2}-\\d{2}")) {
+            value = String.join("", value.split("-"));
+            int length = value.length();
+            value = value.substring(length - 10, length);
+        }
+        phoneNumber = "+7" + value;
+    }
+
     @Override
     public String toString() {
         return "Booking{" +
@@ -76,8 +92,9 @@ public class Booking {
     }
 
     public String toMessage() {
-        return "Дата: " + getDate() + "\nПосадка: " + fromPlace +
+        return "№" + getId() + "\nДата: " + getDate() + "\nПосадка: " + fromPlace +
                 "\nВысадка: " + toPlace + "\nКоличество мест: " + passengersCount +
-                "\nНомер телефона: " + phoneNumber + "\nИмя: " + passengerName;
+                "\nНомер телефона: " + phoneNumber + "\nИмя: " + passengerName +
+                "\nTelegram: " + user.getTelegramUserName();
     }
 }

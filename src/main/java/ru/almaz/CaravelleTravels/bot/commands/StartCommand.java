@@ -24,7 +24,7 @@ public class StartCommand extends MyCommand {
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
         String text = TextConfig.startCommandText;
         if (userService.getUserByChatId(chat.getId()) == null) {
-            userService.saveNewBotUser(chat.getId());
+            userService.saveNewBotUser(chat.getId(), user.getUserName());
         }
         SendMessage message = new SendMessage(chat.getId().toString(), text);
         reply(absSender, message);

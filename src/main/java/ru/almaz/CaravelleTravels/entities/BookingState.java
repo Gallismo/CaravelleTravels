@@ -19,12 +19,12 @@ public enum BookingState {
             ".+",
             TextConfig.nameErrorText),
     PHONE(TextConfig.phoneInputText,
-            "(^\\+?\\d-\\d{3}-\\d{3}-\\d{2}-\\d{2}$|^\\+?\\d \\d{3} \\d{3} \\d{2} \\d{2}$|\\+?\\d{11}$)",
+            "(^\\+?\\d-\\d{3}-\\d{3}-\\d{2}-\\d{2}$|^\\+?\\d \\d{3} \\d{3} \\d{2} \\d{2}$|^\\+?\\d{11}$)",
             // Формат +7-999-999-99-99 или 8-999-999-99-99
             TextConfig.phoneErrorText),
     PASSENGERS(TextConfig.passengersInputText,
             "\\d",
-            TextConfig.passengersInputText);
+            TextConfig.passengersErrorText);
 
     private static final BookingState[] values = values();
 

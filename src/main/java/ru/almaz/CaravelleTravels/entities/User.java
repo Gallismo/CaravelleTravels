@@ -25,6 +25,9 @@ public class User {
     @Column(name = "chat_id", nullable = false, unique = true)
     private Long chatId;
 
+    @Column(name = "telegram_user_name")
+    private String telegramUserName;
+
     @Column(name = "permissions", nullable = false)
     private boolean permissions = false;
 
@@ -38,5 +41,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
 
-
+    public void setTelegramUserName(String userName) {
+        telegramUserName = "@" + userName;
+    }
 }

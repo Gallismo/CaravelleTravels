@@ -23,7 +23,7 @@ public class InformationController {
     public String all(Model model) {
         List<UpdatableContent> informations = updatableContentService.findAll();
         model.addAttribute("informations", informations);
-        return "/information/all";
+        return "information/all";
     }
 
     @DeleteMapping("/{id}")
@@ -35,7 +35,7 @@ public class InformationController {
     @GetMapping("/new")
     public String newInformation(Model model) {
         model.addAttribute("newInformation", new UpdatableContent());
-        return "/information/new";
+        return "information/new";
     }
 
     @PostMapping("/new")
@@ -47,7 +47,7 @@ public class InformationController {
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable("id") long id) {
         model.addAttribute("updatedInformation", updatableContentService.findById(id));
-        return "/information/edit";
+        return "information/edit";
     }
 
     @PatchMapping("/{id}")

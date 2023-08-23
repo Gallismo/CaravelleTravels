@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ru.almaz</groupId>
-	<artifactId>CaravelleTravels</artifactId>
+	<artifactId>caravelletravels</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>CaravelleTravels</name>
+	<name>caravelletravels</name>
 	<description>Телеграм бот для записи на поездки Caravelle Travels: Уфа-Учалы</description>
 	<properties>
 		<java.version>17</java.version>
@@ -66,9 +66,8 @@
 			<version>${telegram.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
 		</dependency>
 
 	</dependencies>

@@ -51,7 +51,6 @@ public class BookingProcessRouter {
 
         setCurrentColumnValue(user, booking, messageText);
         user.setBookingState(user.getBookingState().next());
-        userService.update(user.getId(), user);
 
         if (user.getBookingState() == BookingState.NONE) {
             addNotifySuperUsersMessages(messages, booking);
@@ -60,8 +59,11 @@ public class BookingProcessRouter {
             user.setProcessingBooking(null);
             user.setBookingState(BookingState.NONE);
 
+            bookingService.update(booking.getId(), booking);
+            userService.update(user.getId(), user);
+
             SendMessage sendMessage = new SendMessage(chatId.toString(),
-                     TextConfig.bookingCreatedPrefixText + user.getProcessingBooking() + TextConfig.bookingCreatedPostfixText);
+                     TextConfig.bookingCreatedPrefixText + booking.getId() + TextConfig.bookingCreatedPostfixText);
             sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
             messages.add(sendMessage);
 
@@ -91,7 +93,7 @@ public class BookingProcessRouter {
         List<User> superUsers = userService.findAllByPermission(true);
         if (superUsers.size() > 0) {
             StringBuilder messageText = new StringBuilder();
-            messageText.append(TextConfig.notifyPrefixText).append(booking.getId()).append('\n').append(booking.toMessage());
+            messageText.append(TextConfig.notifyPrefixText).append('\n').append(booking.toMessage());
             for (User user : superUsers) {
                 SendMessage sendMessage = new SendMessage(user.getChatId().toString(), messageText.toString());
                 sendMessage.setReplyMarkup(Keyboards.getProccesedButton(booking.getId()));

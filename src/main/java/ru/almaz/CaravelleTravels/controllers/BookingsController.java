@@ -12,7 +12,6 @@ import ru.almaz.CaravelleTravels.services.BookingService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/booking")
 public class BookingsController {
     private final BookingService bookingService;
 

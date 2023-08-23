@@ -24,7 +24,7 @@ public class AnswersController {
     public String showAll(Model model) {
         List<Answer> answers = answerService.findAll();
         model.addAttribute("answers", answers);
-        return "/answers/all";
+        return "answers/all";
     }
 
     @DeleteMapping("/{id}")
@@ -36,7 +36,7 @@ public class AnswersController {
     @GetMapping("/new")
     public String newAnswer(Model model) {
         model.addAttribute("newAnswer", new Answer());
-        return "/answers/new";
+        return "answers/new";
     }
 
     @PostMapping("/new")

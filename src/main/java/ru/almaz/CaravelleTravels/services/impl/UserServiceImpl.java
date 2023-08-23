@@ -24,8 +24,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void saveNewBotUser(Long chatId) {
+    public void saveNewBotUser(Long chatId, String telegramUserName) {
         User newUser = new User(chatId);
+        newUser.setTelegramUserName(telegramUserName);
         userRepository.save(newUser);
     }
 
@@ -89,5 +90,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllByPermission(boolean isHavePermission) {
         return userRepository.findAllByPermissions(isHavePermission);
+    }
+
+    @Override
+    @Transactional
+    public void givePermissionForChatId(User newUser) {
+        User isExistUser = getUserByChatId(newUser.getChatId());
+        if (isExistUser == null) {
+            userRepository.save(newUser);
+        } else {
+            isExistUser.setPermissions(true);
+            userRepository.save(isExistUser);
+        }
     }
 }

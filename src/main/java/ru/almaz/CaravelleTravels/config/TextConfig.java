@@ -45,12 +45,12 @@ public class TextConfig {
             "соблюдая допустимый формат.";
     public static final String bookingCreatedPrefixText = "Процесс заполнения заявки №";
     public static final String bookingCreatedPostfixText = " завершен, ожидайте звонка!";
-    public static final String notifyPrefixText = "Оформлена заявка №";
+    public static final String notifyPrefixText = "Оформлена новая заявка";
     public static final String questionsMessageText = "Часто задаваемые вопросы:";
-    public static final String findByDateNotInputtedDateText = "Необходимо указать дату заявки (/getbooking XX.XX.XXXX).";
+    public static final String findByDateNotInputtedDateText = "Необходимо указать дату заявки (/date XX.XX.XXXX).";
     public static final String notFoundedByDateBookingsText = "Заявок с такой датой не существует.";
     public static final String noPermissionText = "Вы не имеете прав доступа.";
-    public static final String findByIdNotInputtedIdText = "Необходимо указать номер заявки (/getbooking X).";
+    public static final String findByIdNotInputtedIdText = "Необходимо указать номер заявки (/find X).";
     public static final String notIntegerBookingIdErrorText = "Номер заявки необходимо указать в виде целого числа.";
     public static final String notFoundedByIdBookingText = "Заявки с таким номером не существует.";
     public static final String noBookingProcessText = "Вы не начинали заполнять заявку на поездку.\n" +

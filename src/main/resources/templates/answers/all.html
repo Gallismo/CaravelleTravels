@@ -5,11 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-    <div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
-        <a href="/information/all">Информация</a>
-        <a href="/answers/all">Вопросы и ответы</a>
-        <a href="/booking/">Список заявок</a>
-    </div>
+<div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+    <a href="/information/all">Информация</a>
+    <a href="/answers/all">Вопросы и ответы</a>
+    <a href="/">Список заявок</a>
+    <a href="/permission">Выдать права</a>
+</div>
     <a href="/answers/new">Добавить новый вопрос ответ</a>
     <div  style="display: flex; justify-content: space-evenly">
         <div th:each="answer : ${answers}" style="border: 1px solid black; padding: 0.5rem; flex-wrap: wrap">

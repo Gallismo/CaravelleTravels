@@ -1,5 +1,6 @@
 /src/main/resources/application.properties
 /src/main/resources/bot.properties
+docker-compose.yml
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

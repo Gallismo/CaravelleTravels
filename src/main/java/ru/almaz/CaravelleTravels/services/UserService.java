@@ -6,7 +6,7 @@ import ru.almaz.CaravelleTravels.entities.User;
 import java.util.List;
 
 public interface UserService {
-    void saveNewBotUser(Long chatId);
+    void saveNewBotUser(Long chatId, String telegramUserName);
 
     User getUserByChatId(Long chatId);
 
@@ -22,4 +22,6 @@ public interface UserService {
     void clearProcessingBooking(Long chatId);
 
     List<User> findAllByPermission(boolean isHavePermission);
+
+    void givePermissionForChatId(User newUser);
 }

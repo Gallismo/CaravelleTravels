@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+    <a href="/information/all">Информация</a>
+    <a href="/answers/all">Вопросы и ответы</a>
+    <a href="/">Список заявок</a>
+    <a href="/permission">Выдать права</a>
+</div>
+<form action="/permission" th:method="POST" th:object="${user}" style="width: 30%">
+  <p>Telegram ID:</p>
+  <input type="text" name="telegramId" id="telegramId" th:field="*{chatId}"/>
+  <div style="display: flex; justify-content: space-evenly;">
+      <p>Права доступа (галочка - есть права, нет галочки - нет прав)</p>
+      <input type="checkbox" name="permissions" id="permissions" th:field="*{permissions}"/>
+  </div>
+  <br>
+  <button>Назначить</button>
+</form>
+</body>
+</html>
