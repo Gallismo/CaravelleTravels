@@ -1,5 +1,6 @@
 package ru.almaz.CaravelleTravels.bot.commands;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -8,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
-import ru.almaz.CaravelleTravels.config.TextConfig;
+import ru.almaz.CaravelleTravels.config.MessagesText;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.services.BookingService;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@Slf4j
 public class GetBookingsByDateCommand extends MyCommand {
     private final UserService userService;
     private final BookingService bookingService;
@@ -32,11 +34,13 @@ public class GetBookingsByDateCommand extends MyCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+        log.info("BookingsByDate command executed by user" + user + " by chat" + chat);
+
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat.getId().toString());
 
         if (strings.length == 0) {
-            sendMessage.setText(TextConfig.findByDateNotInputtedDateText);
+            sendMessage.setText(MessagesText.findByDateNotInputtedDateText);
             reply(absSender, sendMessage);
             return;
         }
@@ -44,7 +48,7 @@ public class GetBookingsByDateCommand extends MyCommand {
         try {
             bookingDate = BookingState.dateFormatter().parse(strings[0]);
         } catch (ParseException e) {
-            sendMessage.setText(TextConfig.dateErrorText);
+            sendMessage.setText(MessagesText.dateErrorText);
             reply(absSender, sendMessage);
             return;
         }
@@ -58,12 +62,12 @@ public class GetBookingsByDateCommand extends MyCommand {
                     reply(absSender, sendMessage);
                 }
             } else {
-                sendMessage.setText(TextConfig.notFoundedByDateBookingsText);
+                sendMessage.setText(MessagesText.notFoundedByDateBookingsText);
                 reply(absSender, sendMessage);
             }
             return;
         }
-        sendMessage.setText(TextConfig.noPermissionText);
+        sendMessage.setText(MessagesText.noPermissionText);
         reply(absSender, sendMessage);
     }
 }

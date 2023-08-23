@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.almaz.CaravelleTravels.bot.commands.*;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
 import ru.almaz.CaravelleTravels.config.BotConfig;
-import ru.almaz.CaravelleTravels.config.TextConfig;
+import ru.almaz.CaravelleTravels.config.MessagesText;
 import ru.almaz.CaravelleTravels.entities.Answer;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
@@ -70,11 +70,16 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
                 if (dbUser != null && dbUser.isPermissions()) {
                     reply(absSender, getUserCommands(chat.getId().toString(), true));
                 } else {
-                    reply(absSender, new SendMessage(chat.getId().toString(), TextConfig.noPermissionText));
+                    reply(absSender, new SendMessage(chat.getId().toString(), MessagesText.noPermissionText));
                 }
             }
         });
         registerDefaultAction(((absSender, message) -> sendMessage(new SendMessage(message.getChatId().toString(), "Неизвестная команда\n\nДля получения списка команд введите /help"))));
+    }
+
+    @Override
+    public String getBotUsername() {
+        return config.getName();
     }
 
     private SendMessage getUserCommands(String chatId, boolean forAdmin) {
@@ -110,7 +115,6 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
         return sendMessage;
     }
 
-
     private void sendMessage(SendMessage message) {
         try {
             execute(message);
@@ -126,11 +130,6 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
     }
 
     @Override
-    public String getBotUsername() {
-        return config.getName();
-    }
-
-    @Override
     public void processNonCommandUpdate(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             List<SendMessage> messages = bookingProcessRouter.processAndReturnMessages(update.getMessage().getChatId(), update.getMessage().getText());
@@ -140,7 +139,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
             String callback = update.getCallbackQuery().getData();
             Message message = update.getCallbackQuery().getMessage();
             Long chatId = message.getChatId();
-
+            log.info("User executed callback:" + callback + chatId + "_id");
             if (callback.matches("processed_\\d+")) {
                 Long bookingId = Long.parseLong(callback.split("_")[1]);
                 ru.almaz.CaravelleTravels.entities.User user = userService.getUserByChatId(chatId);

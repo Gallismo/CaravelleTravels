@@ -1,30 +1,30 @@
 package ru.almaz.CaravelleTravels.entities;
 
-import ru.almaz.CaravelleTravels.config.TextConfig;
+import ru.almaz.CaravelleTravels.config.MessagesText;
 
 import java.text.SimpleDateFormat;
 
 public enum BookingState {
     NONE("Ничего", "", "error"),
-    DATE(TextConfig.dateInputText,
+    DATE(MessagesText.dateInputText,
             "\\d{2}\\.\\d{2}\\.\\d{4}",
-            TextConfig.dateErrorText),
-    FROM(TextConfig.fromInputText,
+            MessagesText.dateErrorText),
+    FROM(MessagesText.fromInputText,
             ".+",
-            TextConfig.fromErrorText),
-    TO(TextConfig.toInputText,
+            MessagesText.fromErrorText),
+    TO(MessagesText.toInputText,
             ".+",
-            TextConfig.toErrorText),
-    NAME(TextConfig.nameInputText,
+            MessagesText.toErrorText),
+    NAME(MessagesText.nameInputText,
             ".+",
-            TextConfig.nameErrorText),
-    PHONE(TextConfig.phoneInputText,
+            MessagesText.nameErrorText),
+    PHONE(MessagesText.phoneInputText,
             "(^\\+?\\d-\\d{3}-\\d{3}-\\d{2}-\\d{2}$|^\\+?\\d \\d{3} \\d{3} \\d{2} \\d{2}$|^\\+?\\d{11}$)",
             // Формат +7-999-999-99-99 или 8-999-999-99-99
-            TextConfig.phoneErrorText),
-    PASSENGERS(TextConfig.passengersInputText,
+            MessagesText.phoneErrorText),
+    PASSENGERS(MessagesText.passengersInputText,
             "\\d",
-            TextConfig.passengersErrorText);
+            MessagesText.passengersErrorText);
 
     private static final BookingState[] values = values();
 

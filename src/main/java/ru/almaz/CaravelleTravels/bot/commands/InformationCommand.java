@@ -1,5 +1,6 @@
 package ru.almaz.CaravelleTravels.bot.commands;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,6 +14,7 @@ import ru.almaz.CaravelleTravels.services.UpdatableContentService;
 import java.util.List;
 
 @Component
+@Slf4j
 public class InformationCommand extends MyCommand {
 
     private final UpdatableContentService updatableContentService;
@@ -25,6 +27,8 @@ public class InformationCommand extends MyCommand {
 
     @Override
     public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
+        log.info("Information command executed by user" + user + " by chat" + chat);
+
         List<UpdatableContent> updatableContents = updatableContentService.findAll();
         for (UpdatableContent updatableContent: updatableContents) {
             reply(absSender, new SendMessage(chat.getId().toString(), updatableContent.toMessage()));
