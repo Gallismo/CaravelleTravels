@@ -48,77 +48,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    @Deprecated
-    public void setDateColumn(User user, String value) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setDate(value);
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
-    @Deprecated
-    public void setFromColumn(User user, String value) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setFromPlace(value);
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
-    @Deprecated
-    public void setToColumn(User user, String value) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setToPlace(value);
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
-    @Deprecated
-    public void setPhoneColumn(User user, String value) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setPhoneNumber(value);
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
-    @Deprecated
-    public void setNameColumn(User user, String value) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setPassengerName(value);
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
-    @Deprecated
-    public void setPassengersColumn(User user, String value) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setPassengersCount(Integer.valueOf(value));
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
     public void update(Long id, Booking booking) {
         booking.setId(id);
-        bookingRepository.save(booking);
-    }
-
-    @Override
-    @Transactional
-    public void setStatus(User user, BookingStatus status) {
-        Booking booking = getBookingById(user.getProcessingBooking());
-        if (booking == null) return;
-        booking.setBookingStatus(status);
         bookingRepository.save(booking);
     }
 
