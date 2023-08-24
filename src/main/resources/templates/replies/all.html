@@ -5,6 +5,13 @@
     <title>Title</title>
 </head>
 <body>
+<div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+    <a href="/information/all">Информация</a>
+    <a href="/answers/all">Вопросы и ответы</a>
+    <a href="/">Список заявок</a>
+    <a href="/permission">Выдать права</a>
+    <a href="/replies/all">Ответы бота</a>
+</div>
     <div  style="display: flex; justify-content: space-evenly; flex-wrap: wrap">
         <div th:each="reply : ${replies}" style="border: 1px solid black; padding: 0.5rem; max-width: 25%; margin-bottom: 0.5rem">
             <p>Идентификатор текста:</p>
