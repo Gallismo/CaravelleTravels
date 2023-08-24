@@ -1,30 +1,33 @@
 package ru.almaz.CaravelleTravels.entities;
 
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.almaz.CaravelleTravels.config.RepliesText;
 
 import java.text.SimpleDateFormat;
 
+
 public enum BookingState {
-    NONE("Ничего", "", "error"),
-    DATE(MessagesText.dateInputText,
+    NONE(null, "", null),
+    DATE(RepliesText.dateInputText,
             "\\d{2}\\.\\d{2}\\.\\d{4}",
-            MessagesText.dateErrorText),
-    FROM(MessagesText.fromInputText,
+            RepliesText.dateErrorText),
+    FROM(RepliesText.fromInputText,
             ".+",
-            MessagesText.fromErrorText),
-    TO(MessagesText.toInputText,
+            RepliesText.fromErrorText),
+    TO(RepliesText.toInputText,
             ".+",
-            MessagesText.toErrorText),
-    NAME(MessagesText.nameInputText,
+            RepliesText.toErrorText),
+    NAME(RepliesText.nameInputText,
             ".+",
-            MessagesText.nameErrorText),
-    PHONE(MessagesText.phoneInputText,
+            RepliesText.nameErrorText),
+    PHONE(RepliesText.phoneInputText,
             "(^\\+?\\d-\\d{3}-\\d{3}-\\d{2}-\\d{2}$|^\\+?\\d \\d{3} \\d{3} \\d{2} \\d{2}$|^\\+?\\d{11}$)",
             // Формат +7-999-999-99-99 или 8-999-999-99-99
-            MessagesText.phoneErrorText),
-    PASSENGERS(MessagesText.passengersInputText,
+            RepliesText.phoneErrorText),
+    PASSENGERS(RepliesText.passengersInputText,
             "\\d",
-            MessagesText.passengersErrorText);
+            RepliesText.passengersErrorText);
 
     private static final BookingState[] values = values();
 
@@ -32,12 +35,11 @@ public enum BookingState {
         return new SimpleDateFormat("dd.MM.yyyy");
     }
 
-    private final String messageToSend;
+    private final RepliesText messageToSend;
     private final String regex;
-    private final String regexErrorMessage;
+    private final RepliesText regexErrorMessage;
 
-
-    BookingState(String messageToSend, String regex, String regexErrorMessage) {
+    BookingState(RepliesText messageToSend, String regex, RepliesText regexErrorMessage) {
         this.messageToSend = messageToSend;
         this.regex = regex;
         this.regexErrorMessage = regexErrorMessage;
@@ -50,7 +52,7 @@ public enum BookingState {
         return values[(this.ordinal() - 1) % values.length];
     }
 
-    public String getMessageToSend() {
+    public RepliesText getMessageToSend() {
         return messageToSend;
     }
 
@@ -58,7 +60,7 @@ public enum BookingState {
         return regex;
     }
 
-    public String getRegexErrorMessage() {
+    public RepliesText getRegexErrorMessage() {
         return regexErrorMessage;
     }
 }

@@ -8,18 +8,21 @@ import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import ru.almaz.CaravelleTravels.config.RepliesText;
+import ru.almaz.CaravelleTravels.services.CustomReplyService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
 @Component
 @Slf4j
 public class BackCommand extends MyCommand {
     private final UserService userService;
+    private final CustomReplyService customReplyService;
 
     @Autowired
-    public BackCommand(UserService userService) {
+    public BackCommand(UserService userService, CustomReplyService customReplyService) {
         super("back", "Возвращает к предыдущему шагу заполнения заявки");
         this.userService = userService;
+        this.customReplyService = customReplyService;
     }
 
     @Override
@@ -29,11 +32,14 @@ public class BackCommand extends MyCommand {
 
         ru.almaz.CaravelleTravels.entities.User dbUser = userService.doesUserStartedBooking(chat.getId());
         if (dbUser == null) {
-            reply(absSender, new SendMessage(chat.getId().toString(), MessagesText.noBookingProcessText));
+            reply(absSender, new SendMessage(chat.getId().toString(), customReplyService.findCustomTextOrDefault(RepliesText.noBookingProcessText)));
             return;
         }
 
         dbUser = userService.setPrevBookingState(chat.getId());
-        reply(absSender, new SendMessage(chat.getId().toString(), dbUser.getBookingState().getMessageToSend()));
+        reply(absSender, new SendMessage(
+                chat.getId().toString(),
+                customReplyService.findCustomTextOrDefault(dbUser.getBookingState().getMessageToSend())
+        ));
     }
 }

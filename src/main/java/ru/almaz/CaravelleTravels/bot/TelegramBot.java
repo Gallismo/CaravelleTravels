@@ -16,12 +16,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.almaz.CaravelleTravels.bot.commands.*;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
 import ru.almaz.CaravelleTravels.config.BotConfig;
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import ru.almaz.CaravelleTravels.config.RepliesText;
 import ru.almaz.CaravelleTravels.entities.Answer;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
 import ru.almaz.CaravelleTravels.services.AnswerService;
 import ru.almaz.CaravelleTravels.services.BookingService;
+import ru.almaz.CaravelleTravels.services.CustomReplyService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
     private final UserService userService;
     private final BookingService bookingService;
     private final AnswerService answerService;
+
     @Autowired
     public TelegramBot(BotConfig config, StartCommand startCommand,
                        BookingCommand bookingCommand, CancelBookingCommand cancelBookingCommand,
@@ -42,7 +44,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
                        InformationCommand informationCommand, UserService userService,
                        BookingService bookingService, GetBookingCommand getBookingCommand,
                        QuestionsCommand questionsCommand, AnswerService answerService,
-                       GetBookingsByDateCommand getBookingsByDateCommand) {
+                       GetBookingsByDateCommand getBookingsByDateCommand, CustomReplyService customReplyService) {
         super(config.getToken());
         this.config = config;
         this.bookingProcessRouter = bookingProcessRouter;
@@ -70,7 +72,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
                 if (dbUser != null && dbUser.isPermissions()) {
                     reply(absSender, getUserCommands(chat.getId().toString(), true));
                 } else {
-                    reply(absSender, new SendMessage(chat.getId().toString(), MessagesText.noPermissionText));
+                    reply(absSender, new SendMessage(chat.getId().toString(), customReplyService.findCustomTextOrDefault(RepliesText.noPermissionText)));
                 }
             }
         });

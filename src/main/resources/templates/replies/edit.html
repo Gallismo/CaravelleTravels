@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="margin: 1rem auto; display: flex; justify-content: space-evenly; flex-wrap: wrap">
+    <a href="/information/all">Информация</a>
+    <a href="/answers/all">Вопросы и ответы</a>
+    <a href="/">Список заявок</a>
+    <a href="/permission">Выдать права</a>
+</div>
+<form th:action="@{/replies/{id}(id=${reply.getId()})}" th:method="PATCH" th:object="${reply}">
+    <p>Идентификатор текста:</p>
+    <div th:text="${reply.getDefaultText()}"></div>
+    <p>Ответ по умолчанию:</p>
+    <div th:text="${reply.getDefaultText().defaultText}"></div>
+    <input type="hidden" name="defaultText" id="defaultText" th:field="*{defaultText}">
+    <p>Новый ответ:</p>
+    <textarea name="customText" id="customText" cols="30" rows="10" th:field="*{customText}"></textarea>
+    <button>Обновить</button>
+</form>
+</body>
+</html>

@@ -9,9 +9,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import ru.almaz.CaravelleTravels.config.RepliesText;
 import ru.almaz.CaravelleTravels.entities.Answer;
 import ru.almaz.CaravelleTravels.services.AnswerService;
+import ru.almaz.CaravelleTravels.services.CustomReplyService;
 
 import java.util.List;
 
@@ -19,11 +20,13 @@ import java.util.List;
 @Slf4j
 public class QuestionsCommand extends MyCommand {
     private final AnswerService answerService;
+    private final CustomReplyService customReplyService;
 
     @Autowired
-    public QuestionsCommand(AnswerService answerService) {
+    public QuestionsCommand(AnswerService answerService, CustomReplyService customReplyService) {
         super("questions", "Часто задаваемые вопросы и ответы на них");
         this.answerService = answerService;
+        this.customReplyService = customReplyService;
     }
 
 
@@ -34,7 +37,7 @@ public class QuestionsCommand extends MyCommand {
         List<Answer> answers = answerService.findAll();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chat.getId());
-        sendMessage.setText(MessagesText.questionsMessageText);
+        sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.questionsMessageText));
         sendMessage.setReplyMarkup(Keyboards.getQuestionsKeyboard(answers));
         reply(absSender, sendMessage);
     }

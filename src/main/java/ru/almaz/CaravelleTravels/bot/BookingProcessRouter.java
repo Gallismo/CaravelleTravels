@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import ru.almaz.CaravelleTravels.config.RepliesText;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.entities.BookingStatus;
 import ru.almaz.CaravelleTravels.entities.User;
 import ru.almaz.CaravelleTravels.services.BookingService;
+import ru.almaz.CaravelleTravels.services.CustomReplyService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
 import java.util.ArrayList;
@@ -21,11 +22,13 @@ import java.util.List;
 public class BookingProcessRouter {
     private final UserService userService;
     private final BookingService bookingService;
+    private final CustomReplyService customReplyService;
 
     @Autowired
-    public BookingProcessRouter(UserService userService, BookingService bookingService) {
+    public BookingProcessRouter(UserService userService, BookingService bookingService, CustomReplyService customReplyService) {
         this.userService = userService;
         this.bookingService = bookingService;
+        this.customReplyService = customReplyService;
     }
 
     public List<SendMessage> processAndReturnMessages(Long chatId, String messageText) {
@@ -34,13 +37,16 @@ public class BookingProcessRouter {
         List<SendMessage> messages = new ArrayList<>();
         User user = userService.doesUserStartedBooking(chatId);
         if (user == null) {
-            SendMessage sendMessage = new SendMessage(chatId.toString(), MessagesText.notStartedBookingText);
+            SendMessage sendMessage = new SendMessage(chatId.toString(), customReplyService.findCustomTextOrDefault(RepliesText.notStartedBookingText));
             messages.add(sendMessage);
             return messages;
         }
 
         if (!messageText.matches(user.getBookingState().getRegex())) {
-            SendMessage sendMessage = new SendMessage(chatId.toString(), user.getBookingState().getRegexErrorMessage());
+            SendMessage sendMessage = new SendMessage(
+                    chatId.toString(),
+                    customReplyService.findCustomTextOrDefault(user.getBookingState().getRegexErrorMessage())
+            );
             messages.add(sendMessage);
             return messages;
         }
@@ -48,7 +54,7 @@ public class BookingProcessRouter {
         Booking booking = bookingService.getBookingById(user.getProcessingBooking());
         if (booking == null) {
             userService.clearProcessingBooking(chatId);
-            SendMessage sendMessage = new SendMessage(chatId.toString(), MessagesText.bookingUnexpectedErrorText);
+            SendMessage sendMessage = new SendMessage(chatId.toString(), customReplyService.findCustomTextOrDefault(RepliesText.bookingUnexpectedErrorText));
             messages.add(sendMessage);
             return messages;
         }
@@ -67,7 +73,9 @@ public class BookingProcessRouter {
             userService.update(user.getId(), user);
 
             SendMessage sendMessage = new SendMessage(chatId.toString(),
-                     MessagesText.bookingCreatedPrefixText + booking.getId() + MessagesText.bookingCreatedPostfixText);
+                     customReplyService.findCustomTextOrDefault(RepliesText.bookingCreatedPrefixText)
+                             + booking.getId()
+                             + customReplyService.findCustomTextOrDefault(RepliesText.bookingCreatedPostfixText));
             sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
             messages.add(sendMessage);
 
@@ -76,7 +84,10 @@ public class BookingProcessRouter {
         bookingService.update(booking.getId(), booking);
         userService.update(user.getId(), user);
 
-        SendMessage sendMessage = new SendMessage(chatId.toString(), user.getBookingState().getMessageToSend());
+        SendMessage sendMessage = new SendMessage(
+                chatId.toString(),
+                customReplyService.findCustomTextOrDefault(user.getBookingState().getMessageToSend())
+        );
         sendMessage.setReplyMarkup(Keyboards.getReplyKeyboard("/cancel", "/back"));
         messages.add(sendMessage);
         return messages;
@@ -97,7 +108,9 @@ public class BookingProcessRouter {
         List<User> superUsers = userService.findAllByPermission(true);
         if (superUsers.size() > 0) {
             StringBuilder messageText = new StringBuilder();
-            messageText.append(MessagesText.notifyPrefixText).append('\n').append(booking.toMessage());
+            messageText.append(
+                    customReplyService.findCustomTextOrDefault(RepliesText.notifyPrefixText)
+            ).append('\n').append(booking.toMessage());
             for (User user : superUsers) {
                 SendMessage sendMessage = new SendMessage(user.getChatId().toString(), messageText.toString());
                 sendMessage.setReplyMarkup(Keyboards.getProccesedButton(booking.getId()));

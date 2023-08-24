@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div  style="display: flex; justify-content: space-evenly; flex-wrap: wrap">
+        <div th:each="reply : ${replies}" style="border: 1px solid black; padding: 0.5rem; max-width: 25%; margin-bottom: 0.5rem">
+            <p>Идентификатор текста:</p>
+            <div th:text="${reply.getDefaultText()}"></div>
+            <p>Ответ по умолчанию:</p>
+            <div th:text="${reply.getDefaultText().defaultText}"></div>
+            <p>Измененный ответ:</p>
+            <div th:text="${reply.getCustomText()}"></div>
+            <a th:href="${'/replies/edit/' + reply.getId()}">Редактировать</a>
+        </div>
+    </div>
+</body>
+</html>

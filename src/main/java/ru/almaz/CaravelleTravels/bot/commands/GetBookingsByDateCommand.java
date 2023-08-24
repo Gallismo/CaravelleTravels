@@ -9,10 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import ru.almaz.CaravelleTravels.config.RepliesText;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.entities.BookingState;
 import ru.almaz.CaravelleTravels.services.BookingService;
+import ru.almaz.CaravelleTravels.services.CustomReplyService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
 import java.text.ParseException;
@@ -24,12 +25,14 @@ import java.util.List;
 public class GetBookingsByDateCommand extends MyCommand {
     private final UserService userService;
     private final BookingService bookingService;
+    private final CustomReplyService customReplyService;
 
     @Autowired
-    public GetBookingsByDateCommand(UserService userService, BookingService bookingService) {
+    public GetBookingsByDateCommand(UserService userService, BookingService bookingService, CustomReplyService customReplyService) {
         super("date", "admin Команда для нахождения заявок по дате\n<b>Для администратора</b> (Пример /date 01.01.2000)");
         this.userService = userService;
         this.bookingService = bookingService;
+        this.customReplyService = customReplyService;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class GetBookingsByDateCommand extends MyCommand {
         sendMessage.setChatId(chat.getId().toString());
 
         if (strings.length == 0) {
-            sendMessage.setText(MessagesText.findByDateNotInputtedDateText);
+            sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.findByDateNotInputtedDateText));
             reply(absSender, sendMessage);
             return;
         }
@@ -48,7 +51,7 @@ public class GetBookingsByDateCommand extends MyCommand {
         try {
             bookingDate = BookingState.dateFormatter().parse(strings[0]);
         } catch (ParseException e) {
-            sendMessage.setText(MessagesText.dateErrorText);
+            sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.dateErrorText));
             reply(absSender, sendMessage);
             return;
         }
@@ -62,12 +65,12 @@ public class GetBookingsByDateCommand extends MyCommand {
                     reply(absSender, sendMessage);
                 }
             } else {
-                sendMessage.setText(MessagesText.notFoundedByDateBookingsText);
+                sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.notFoundedByDateBookingsText));
                 reply(absSender, sendMessage);
             }
             return;
         }
-        sendMessage.setText(MessagesText.noPermissionText);
+        sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.noPermissionText));
         reply(absSender, sendMessage);
     }
 }

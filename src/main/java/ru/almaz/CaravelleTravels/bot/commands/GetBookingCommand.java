@@ -9,9 +9,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import ru.almaz.CaravelleTravels.bot.Keyboards;
 import ru.almaz.CaravelleTravels.bot.commands.abstr.MyCommand;
-import ru.almaz.CaravelleTravels.config.MessagesText;
+import ru.almaz.CaravelleTravels.config.RepliesText;
 import ru.almaz.CaravelleTravels.entities.Booking;
 import ru.almaz.CaravelleTravels.services.BookingService;
+import ru.almaz.CaravelleTravels.services.CustomReplyService;
 import ru.almaz.CaravelleTravels.services.UserService;
 
 @Component
@@ -19,12 +20,14 @@ import ru.almaz.CaravelleTravels.services.UserService;
 public class GetBookingCommand extends MyCommand {
     private final UserService userService;
     private final BookingService bookingService;
+    private final CustomReplyService customReplyService;
 
     @Autowired
-    public GetBookingCommand(UserService userService, BookingService bookingService) {
+    public GetBookingCommand(UserService userService, BookingService bookingService, CustomReplyService customReplyService) {
         super("find", "admin Команда для нахождения заявки по идентификатору\n<b>Для администратора</b> (Пример /find 1)");
         this.userService = userService;
         this.bookingService = bookingService;
+        this.customReplyService = customReplyService;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class GetBookingCommand extends MyCommand {
         sendMessage.setChatId(chat.getId().toString());
 
         if (strings.length == 0) {
-            sendMessage.setText(MessagesText.findByIdNotInputtedIdText);
+            sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.findByIdNotInputtedIdText));
             reply(absSender, sendMessage);
             return;
         }
@@ -43,7 +46,7 @@ public class GetBookingCommand extends MyCommand {
         try {
             bookingId = Long.parseLong(strings[0]);
         } catch (NumberFormatException e) {
-            sendMessage.setText(MessagesText.notIntegerBookingIdErrorText);
+            sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.notIntegerBookingIdErrorText));
             reply(absSender, sendMessage);
             return;
         }
@@ -55,12 +58,12 @@ public class GetBookingCommand extends MyCommand {
                 sendMessage.setReplyMarkup(Keyboards.getProccesedButton(bookingId));
                 reply(absSender, sendMessage);
             } else {
-                sendMessage.setText(MessagesText.notFoundedByIdBookingText);
+                sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.notFoundedByIdBookingText));
                 reply(absSender, sendMessage);
             }
             return;
         }
-        sendMessage.setText(MessagesText.noPermissionText);
+        sendMessage.setText(customReplyService.findCustomTextOrDefault(RepliesText.noPermissionText));
         reply(absSender, sendMessage);
     }
 }

@@ -1,0 +1,33 @@
+--liquibase formatted sql
+--changeset myname:create-multiple-tables splitStatements:true endDelimiter:;
+
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (1, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (2, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (3, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (4, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (5, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (6, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (7, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (8, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (9, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (10, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (11, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (12, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (13, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (14, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (15, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (16, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (17, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (18, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (19, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (20, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (21, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (22, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (23, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (24, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (25, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (26, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (27, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (28, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (29, NULL);
+INSERT INTO `custom_bot_replies` (default_text, custom_text) VALUES (30, NULL);
