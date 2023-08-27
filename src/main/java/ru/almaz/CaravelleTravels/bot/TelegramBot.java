@@ -44,7 +44,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
                        InformationCommand informationCommand, UserService userService,
                        BookingService bookingService, GetBookingCommand getBookingCommand,
                        QuestionsCommand questionsCommand, AnswerService answerService,
-                       GetBookingsByDateCommand getBookingsByDateCommand, CustomReplyService customReplyService) {
+                       GetBookingsByDateCommand getBookingsByDateCommand, HelpCommand helpCommand) {
         super(config.getToken());
         this.config = config;
         this.bookingProcessRouter = bookingProcessRouter;
@@ -59,23 +59,7 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
         register(questionsCommand);
         register(getBookingCommand);
         register(getBookingsByDateCommand);
-        register(new MyCommand("help", "Выводит список всех команд") {
-            @Override
-            public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-                reply(absSender, getUserCommands(chat.getId().toString(), false));
-            }
-        });
-        register(new MyCommand("help_admin", "Выводит список команд администратора") {
-            @Override
-            public void execute(AbsSender absSender, User user, Chat chat, String[] strings) {
-                ru.almaz.CaravelleTravels.entities.User dbUser = userService.getUserByChatId(chat.getId());
-                if (dbUser != null && dbUser.isPermissions()) {
-                    reply(absSender, getUserCommands(chat.getId().toString(), true));
-                } else {
-                    reply(absSender, new SendMessage(chat.getId().toString(), customReplyService.findCustomTextOrDefault(RepliesText.noPermissionText)));
-                }
-            }
-        });
+        register(helpCommand);
         registerDefaultAction(((absSender, message) -> sendMessage(new SendMessage(message.getChatId().toString(), "Неизвестная команда\n\nДля получения списка команд введите /help"))));
     }
 
@@ -84,40 +68,8 @@ public class TelegramBot extends TelegramLongPollingCommandBot {
         return config.getName();
     }
 
-    private SendMessage getUserCommands(String chatId, boolean forAdmin) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (IBotCommand command : getRegisteredCommands()) {
-            if (forAdmin) {
-                if (command.getDescription().matches("admin .+\n.+")) {
-                    stringBuilder
-                            .append(command.getDescription().split("admin ")[1])
-                            .append(" - ")
-                            .append("<b>")
-                            .append("/")
-                            .append(command.getCommandIdentifier())
-                            .append("</b>")
-                            .append(";\n\n");
-                }
-            } else {
-                if (command.getDescription().matches("admin .+\n.+")) {
-                    continue;
-                }
-                stringBuilder
-                        .append(command.getDescription())
-                        .append(" - ")
-                        .append("<b>")
-                        .append("/")
-                        .append(command.getCommandIdentifier())
-                        .append("</b>")
-                        .append(";\n\n");
-            }
-        }
-        SendMessage sendMessage = new SendMessage(chatId, stringBuilder.toString());
-        sendMessage.setParseMode("HTML");
-        return sendMessage;
-    }
-
     private void sendMessage(SendMessage message) {
+        message.setParseMode("HTML");
         try {
             execute(message);
         } catch (TelegramApiException e) {

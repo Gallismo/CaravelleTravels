@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       file: DDL/004_fix_custom_replies_table.sql
       relativeToChangelogFile: true
+  - include:
+      file: DDL/005_add_rows_to_custom_replies_table.sql
+      relativeToChangelogFile: true
