@@ -3,6 +3,7 @@ package ru.almaz.CaravelleTravels.bot.commands.abstr;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -14,9 +15,19 @@ public abstract class MyCommand extends BotCommand {
         super(commandIdentifier, description);
     }
 
-    protected void reply(AbsSender absSender, BotApiMethod<Message> method) {
+//    DEPRECATED
+//    protected void reply(AbsSender absSender, BotApiMethod<Message> method) {
+//        try {
+//            absSender.execute(method);
+//        } catch (TelegramApiException e) {
+//            log.error(e.getMessage());
+//        }
+//    }
+
+    protected void reply(AbsSender absSender, SendMessage message) {
+        message.setParseMode("HTML");
         try {
-            absSender.execute(method);
+            absSender.execute(message);
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }
